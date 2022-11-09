@@ -4,7 +4,7 @@ using EditorExtension;
 public class SpawnRoom : MonoBehaviour
 {
 #if UNITY_EDITOR
-    [SerializeField] private GameManager _gameManager;
+    [SerializeField] private EditManager _editManager;
 
     [SerializeField] private GameObject[] _rooms = new GameObject[5];
 
@@ -21,9 +21,9 @@ public class SpawnRoom : MonoBehaviour
     [EditorButton("SetRooms")]
     public void SelectRoom()
     {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _editManager = GameObject.Find("EditManager").GetComponent<EditManager>();
 
-        if (_gameManager.EDIT_MODE)
+        if (_editManager.EDIT_MODE)
         {
             SetRoom(_typeRoom);
         }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace EditorExtension
 {
+#if UNITY_EDITOR
+
     /// <summary>
     /// Draw button in Inspector
     /// </summary>
@@ -36,4 +38,6 @@ namespace EditorExtension
             }
         }
     }
+
+#endif
 }

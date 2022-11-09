@@ -5,7 +5,9 @@ using EditorExtension;
 [SelectionBase]
 public class RepeatedObject : MonoBehaviour
 {
-    public GameManager GameManager;
+#if UNITY_EDITOR
+
+    public EditManager EditManager;
     public GameObject SpawnObject;
 
     [Min(1)] public int Rows = 1;
@@ -22,7 +24,7 @@ public class RepeatedObject : MonoBehaviour
     [EditorButton("Instantiate Objs")]
     public void InstantiateObs()
     {
-        if (GameManager.EDIT_MODE)
+        if (EditManager.EDIT_MODE)
         {
             RemoveAllChildren();
 
@@ -69,4 +71,6 @@ public class RepeatedObject : MonoBehaviour
             DestroyImmediate(child.gameObject);
         }
     }
+
+#endif
 }
