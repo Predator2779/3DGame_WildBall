@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class UserInput : MonoBehaviour
 {
+    [SerializeField] private EventHorn _eventHorn;
+
     private PhotonView _photonView;
     private BallBehaviour _ballBehaviour;
     private CameraController _cameraController;
@@ -17,6 +19,11 @@ public class UserInput : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+
+        if (_eventHorn == null)
+        {
+            _eventHorn = FindObjectOfType<EventHorn>();
+        }
 
         _photonView = GetComponent<PhotonView>();
         _ballBehaviour = GetComponent<BallBehaviour>();
@@ -48,7 +55,7 @@ public class UserInput : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        if (!_photonView.IsMine) return; ////////
+        //if (!_photonView.IsMine) return; ////////
 
         Movement();
         MouseScrollWheel();
@@ -74,6 +81,8 @@ public class UserInput : MonoBehaviour
         var mouse_Y = Input.GetAxis(GlobalVariables.MouseY);
 
         _cameraController.CameraControl(mouse_X, mouse_Y);
+
+        print($"mouse_X: {mouse_X}; mouse_Y: {mouse_Y}");
     }
 
     /// <summary>
@@ -92,7 +101,11 @@ public class UserInput : MonoBehaviour
     {
         var ScrollWheel = Input.GetAxis(GlobalVariables.MouseScrollWheel);
 
-        _sphereScaler.ScaleWheel(ScrollWheel);
+        if (ScrollWheel != 0)
+        {
+            _sphereScaler.ScaleWheel(ScrollWheel);
+            _eventHorn.SphereScaler.SendScaleMessage();
+        }
     }
 
     /// <summary>
@@ -101,7 +114,10 @@ public class UserInput : MonoBehaviour
     private void GetQ()
     {
         if (Input.GetKeyUp(KeyCode.Q))
+        {
             _sphereScaler.SetScale(1.0f, 10.0f);
+            _eventHorn.SphereScaler.SendScaleMessage();
+        }
     }
 
     /// <summary>
@@ -110,7 +126,10 @@ public class UserInput : MonoBehaviour
     private void GetE()
     {
         if (Input.GetKeyUp(KeyCode.E))
+        {
             _sphereScaler.SetScale(9.0f, 350.0f);
+            _eventHorn.SphereScaler.SendScaleMessage();
+        }
     }
 
     /// <summary>
@@ -119,6 +138,9 @@ public class UserInput : MonoBehaviour
     private void GetX()
     {
         if (Input.GetKeyUp(KeyCode.X))
+        {
             _sphereScaler.SetScale(3.0f, 10.0f);
+            _eventHorn.SphereScaler.SendScaleMessage();
+        }
     }
 }

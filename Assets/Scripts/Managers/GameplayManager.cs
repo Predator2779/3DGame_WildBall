@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -10,9 +9,8 @@ public class GameplayManager : MonoBehaviour
     //[SerializeField] private Text _scoreText;                   /// Поле текст.
     //public int _score = 0;                                      /// Опыт игрока.
 
-    [Header("GameManager")]                                     
-    public bool _playing = false;                               /// Играет.
-    public bool _paused = false;                                /// Пауза.
+    private enum GameModes { Playing, Paused, ToMenu };
+    [SerializeField] private GameModes _gameMode;
 
     [SerializeField] private GameObject _pausePanel;
     //[SerializeField] private GameObject _mainCamera;
@@ -26,7 +24,7 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
-        //print("Start" + SceneManager.GetActiveScene().name);
+        
     }
 
     /// <summary>
@@ -34,8 +32,7 @@ public class GameplayManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //Playing();
-        Pause();
+        CheckGameMode();
         EscapeButton();
     }
 
@@ -56,11 +53,25 @@ public class GameplayManager : MonoBehaviour
     /// </summary>
     public void LoadScene(string nameScene)
     {
-        //_menuPanel.SetActive(false);
-        //_mainCamera.SetActive(false);
-        //_playing = true;
-
         SceneManager.LoadScene(nameScene);
+    }
+
+    private void CheckGameMode()
+    {
+        switch (_gameMode)
+        {
+            case GameModes.Playing:
+                Playing();
+                break;
+            case GameModes.Paused:
+                Paused();
+                break;
+            case GameModes.ToMenu:
+                ToMenu();
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -68,18 +79,9 @@ public class GameplayManager : MonoBehaviour
     /// </summary>
     public void ToMenu()
     {
-        _paused = false;
+        Time.timeScale = 1;
 
         LoadScene("[0]_Menu");
-
-        //_playing = false;
-        //_paused = false;
-
-        //_pausePanel.SetActive(false);
-        //_menuPanel.SetActive(true);
-        //_mainCamera.SetActive(true);
-
-        //Time.timeScale = 1;
     }
 
     /// <summary>
@@ -87,13 +89,7 @@ public class GameplayManager : MonoBehaviour
     /// </summary>
     public void Continue()
     {
-        _paused = false;
-
-        //_mainCamera.SetActive(false);
-        _pausePanel.SetActive(false);
-        CursorVisible(false);
-
-        Time.timeScale = 1;
+        _gameMode = GameModes.Playing;
     }
 
     /// <summary>
@@ -109,37 +105,37 @@ public class GameplayManager : MonoBehaviour
     /// </summary>
     private void Playing()
     {
-        if (_playing && !_paused)
-        {
-            //MonitorScore();
-        }
+        //MonitorScore();
+
+        //CursorVisible(false);////////////////////////на время
+
+        _pausePanel.SetActive(false);
+
+        Time.timeScale = 1;
     }
 
     /// <summary>
     /// Пауза.
     /// </summary>
-    private void Pause()
+    private void Paused()
     {
-        if (/*_playing && */_paused)
-        {
-            Time.timeScale = 0;
-            CursorVisible(true);
-            //_mainCamera.SetActive(true);
-            _pausePanel.SetActive(true);
-        }
+        Time.timeScale = 0;
+        //CursorVisible(true);/////////////////////////////////на время
+
+        _pausePanel.SetActive(true);
     }
 
     private void EscapeButton()
     {
-        if (Input.GetKey(KeyCode.Escape)/* && _playing*/)
+        if (Input.GetKeyDown(KeyCode.Escape)/* && _playing*/)
         {
-            if (!_paused)
+            if (_gameMode != GameModes.Paused)
             {
-                _paused = true;
+                _gameMode = GameModes.Paused;
             }
             else
             {
-                _paused = false;
+                _gameMode = GameModes.Playing;
             }
         }
     }

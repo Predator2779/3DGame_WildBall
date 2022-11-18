@@ -16,18 +16,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void StartConnection()///////////////////////// не подключается к комнате при повторном подсоединении. вероятно из-за того, что методы находятся в STARTE. ???
     {
-        Log("1");
         PhotonNetwork.NickName = "Player_" + Random.Range(1000, 9999);
-        Log("2");
+
         Log("Player's name is set to " + PhotonNetwork.NickName);
-        Log("3");
 
         PhotonNetwork.AutomaticallySyncScene = true;
-        Log("4");
         PhotonNetwork.GameVersion = "1";
-        Log("5");
+
         PhotonNetwork.ConnectUsingSettings();
-        Log("6");
     }
 
     public void CreateRoom()

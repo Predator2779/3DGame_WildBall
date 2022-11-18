@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -9,6 +10,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform _wildBall;
     [SerializeField] private float _distance;
 
+    private PhotonView _photonView;
+
     private Vector3 _offset;
     private float _xRot, _yRot;
 
@@ -19,10 +22,21 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Start.
     /// </summary>
-    private void Start() => _offset = VectorOffset(_wildBall);
+    private void Start()
+    {
+        StartCalibration();
+    }
+
+    private void StartCalibration()
+    {
+        _offset = VectorOffset(_wildBall);
+        //_photonView.GetComponent<PhotonView>();
+    }
 
     public void CameraControl(float mouse_X, float mouse_Y)
     {
+        //if (!_photonView.IsMine) return; ////////
+
         DistanceFromScale();
 
         RotationControl(mouse_X, mouse_Y);

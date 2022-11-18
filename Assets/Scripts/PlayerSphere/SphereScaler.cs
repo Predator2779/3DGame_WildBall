@@ -5,6 +5,9 @@ public class SphereScaler : MonoBehaviour
     private Rigidbody _rb;
     private float _scaleValue = 0;
 
+    public delegate void Scaling(float scale);
+    public Scaling OnScaling;
+
     private void Start() => _rb = GetComponent<Rigidbody>();
 
     /// <summary>
@@ -61,7 +64,12 @@ public class SphereScaler : MonoBehaviour
     /// <param name="mass"></param>
     public void SetScale(float scale, float mass)
     {
-        transform.localScale = new Vector3(scale, scale, scale); 
+        transform.localScale = new Vector3(scale, scale, scale);
         _rb.mass = mass;
+    }
+
+    public void SendScaleMessage()
+    {
+        OnScaling?.Invoke(transform.localScale.x);
     }
 }
